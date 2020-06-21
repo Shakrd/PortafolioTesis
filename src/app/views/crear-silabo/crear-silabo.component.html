@@ -1,0 +1,413 @@
+      <div class="row justify-content-center">
+        <nav aria-label="...">
+          <ul class="pagination">
+            <li class="page-item disabled">
+              <a class="page-link" tabindex="-1">Atrás</a>
+            </li>
+            <li class="page-item active">
+              <a class="page-link" routerLink="/crear-silabo">Crear Sílabo</a>
+            </li>
+            <li [ngClass]="idSilaboActual ? 'page-item' : 'page-item disabled' ">
+              <a routerLink="/descripcion-objetivos" class="page-link">Objetivos</a>
+            </li>
+            <li [ngClass]="idSilaboActual ? 'page-item' : 'page-item disabled' ">
+              <a routerLink="/resultado-aprendizaje-asignatura" class="page-link">Resultados</a>
+            </li>
+            <li [ngClass]="idSilaboActual ? 'page-item' : 'page-item disabled' ">
+              <a routerLink="/contenido-asignatura" class="page-link">Contenido</a>
+            </li>
+            <li [ngClass]="idSilaboActual ? 'page-item' : 'page-item disabled' ">
+              <a routerLink="/estrategias-recursos" class="page-link">Estrategias y Recursos</a>
+            </li>
+            <li [ngClass]="idSilaboActual ? 'page-item' : 'page-item disabled' ">
+              <a routerLink="/descripcion-objetivos" class="page-link">Siguiente</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+          
+  <div *ngIf="!this.silaboService.viendoSilabo" >
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 mx-auto">
+          <div class="card border-info">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <button class="btn btn-info mx-2" (click)="isCollapsed = !isCollapsed" type="button" >
+                  {{ isCollapsed ? 'Mostrar' : 'Ocultar' }}
+                </button>
+                Crear / Seleccionar Sílabo
+              </h5>
+            </div>
+            
+              <div [collapse]="isCollapsed" class="card-body">
+
+                <div class="row">
+
+                  <div class="col-md-6 mx-auto">
+                    <div class="card border-info">
+                      <div class="card-body">
+                        <form >
+                          <h1>Crear Sílabo</h1>
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label font-weight-bold" for="name">Asignatura</label>
+                            <div class="col-md-9">
+                              <select #asignaturaCompleto (change)="onSelect(asignaturaCompleto.value)" class="form-control">
+                                <option [value]="null" disabled class ="font-weight-bold">Seleccione Asignatura</option>
+                                <option *ngFor="let asignatura of asignaturas" [value]="asignatura | json" >{{asignatura.nombre}}</option>
+                              </select>
+                            </div>
+                          </div>  
+                          <div class="row">
+
+                            <div class="col-md-3">
+                            </div>
+
+                            <div class="col-md-6">
+                              <button type="button" (click)="crearSilabo()" class="btn btn-success">Crear</button>
+                            </div>
+                          </div>                
+                        </form>
+                      </div>  
+                    </div>  
+                  </div>
+                  
+<!--   
+                  <div class="col-md-6 mx-auto">
+                    <div class="card border-info">
+                        <div class="card-body">
+                          <form >
+                            <h1>Clonar Sílabo</h1>
+                            <div class="form-group row">
+                              <label class="col-md-3 col-form-label font-weight-bold" for="anteriores">Anteriores</label>
+                              <div class="col-md-9">
+                                <select class="form-control" >
+                                  <option class ="font-weight-bold">Seleccione Silabo</option>
+                                  <option *ngFor="let silabo of silabos">{{silabo.nombre}}</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-3"></div>
+                              <div class="col-6">
+                                <button type="button" class="btn btn-success px-4">Clonar Silabo</button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                    </div>
+                  </div>
+   -->
+
+
+   <div class="col-md-6 mx-auto">
+    <div class="card border-info">
+        <div class="card-body">
+          <form >
+            <h1>Seleccionar Sílabo Existente</h1>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label font-weight-bold" for="anteriores">Anteriores</label>
+              <div class="col-md-9">
+                <select #silaboCompleto (change)="seleccionarSilabo(silaboCompleto.value)" class="form-control" >
+                  <option class="font-weight-bold" value="null" disabled>Seleccione Silabo</option>
+                  <option *ngFor="let silabo of silabos" [value]="silabo | json"  >{{silabo.nombre}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3"></div>
+              <div class="col-4">
+                <button type="button" (click)="setActualSilabo()" class="btn btn-success px-4">Usar Sílabo</button>
+              </div>
+              
+              <div class="col-4 ml-2">
+                <button type="button" (click)="setActualSilabo(); this.silaboService.viendoSilabo = true;" class="btn btn-success px-4">Ver Sílabo</button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+    </div>
+  </div>
+
+
+        </div>
+                
+              </div>
+
+              <div class="card-footer">
+              </div>
+            </div>
+          </div>
+        </div>        
+
+    <div class="card">
+      <div class="card-header">
+        <h5>
+          <button class="btn btn-info mx-2" (click)="isCollapsed2 = !isCollapsed2" type="button" >
+            {{ isCollapsed2 ? 'Mostrar' : 'Ocultar' }}
+          </button>
+          Información Asignatura  
+        </h5>
+      </div>
+      <div class="card-body" [collapse]="isCollapsed2">
+
+        <div class="container" *ngIf="asignatura">
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Codigo</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.codigo" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Período lectivo</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.periodoLectivo" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Período Académico</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.periodoAcademico.nombre" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Carrera</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.carrera.nombre" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Modalidad</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.modalidad.nombre" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Malla</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.malla.nombre" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Unidad de organización curricular</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.unidadOrganizacionCurricular" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Campo de formación:</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.campoFormacion" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Horas de docencia:</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.totalHorasDocencia" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Horas de trabajo autónomo:</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.totalHorasAutonomas" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Horas de prácticas de aprendizaje:</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.totalHorasPracticasAprendizaje" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">N° total de horas:</label>
+            <div class="col-md-4">
+              <input type="text" required id="text-input" [(ngModel)]="asignatura.numeroTotalHoras" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+          </div>
+
+      </div>
+    </div>
+
+
+    <div *ngIf="silabo" class="card">
+      <div class="card-header">
+        <h5>
+          <button class="btn btn-info mx-2" (click)="isCollapsed4 = !isCollapsed4" type="button" >
+            {{ isCollapsed4 ? 'Mostrar' : 'Ocultar' }}
+          </button>
+          Información Sílabo  
+        </h5>
+      </div>
+      <div class="card-body" [collapse]="isCollapsed4">
+
+        <div class="container" *ngIf="silabo">
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Codigo</label>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="silabo.codigo" name="codigo" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Período lectivo</label>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="silabo.periodoLectivo" name="peridolect" class="form-control" >
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Unidad de organización curricular</label>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="silabo.unidadOrganizacionCurricular" name="organizacional" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Campo de formación:</label>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="silabo.campoFormacion" name="text-input" class="form-control" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Carrera</label>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="silabo.carrera.nombre" name="carrera" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Período Académico</label>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="silabo.periodoAcademico.nombre" name="academico" class="form-control" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Horas de docencia:</label>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="silabo.totalHorasDocencia" name="horadoc" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Horas de trabajo autónomo:</label>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="silabo.totalHorasAutonomas" name="horasAuto" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Horas de prácticas de aprendizaje:</label>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="silabo.totalHorasPracticasAprendizaje" name="practicapr" class="form-control" readonly>
+            </div>
+          </div>
+        
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">N° total de horas:</label>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="silabo.numeroTotalHoras" name="totalhoras" class="form-control" readonly>
+            </div>
+          </div>
+          </div>
+
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input">Observaciones</label>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="silabo.observacion" name="observacion" class="form-control" >
+            </div>
+          </div>
+
+          
+          <div class="form-group row justify-content-center">
+            <label class="col-md-3 col-form-label" for="text-input"></label>
+            <div class="col-md-4">
+              <input type="button" (click)="actualizarSilabo(silabo.id )" name="text-input" class="btn btn-success" value="Actualizar" >
+            </div>
+          </div>
+      </div>
+    </div>
+
+
+
+    <div class="card">
+      <div class="card-header">
+        <h5>
+          <button class="btn btn-info mx-2" (click)="isCollapsed3 = !isCollapsed3" type="button" >
+            {{ isCollapsed3 ? 'Mostrar' : 'Ocultar' }}
+          </button>
+          Prerequisitos / Correquisitos
+        </h5>
+      </div>
+      <div class="card-body" [collapse]="isCollapsed3">
+
+        <div class="row" *ngIf="idSeleccionado">
+          <!--/.col-->
+            <div class="card border-success col-md-5 mx-3" >
+              <div class="card-header">
+                <strong>Prerrequisitos de la Asignatura</strong>
+              </div>
+              <div class="card-body">
+                <table class="table table-sm" >
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre</th>
+                      <th>Codigo</th>
+                    </tr>
+                  </thead>    
+                  <tbody *ngIf="prerequisito" >
+                    <tr *ngFor="let pre of prerequisito">
+                      <td>{{ pre.id }}</td>
+                      <td>{{ pre.nombre }}</td>
+                      <td>{{ pre.codigo }}</td>
+                    </tr>
+                  </tbody>
+                </table>           
+              </div>
+            </div>
+            <div class="card border-success col-md-6 ">
+              <div class="card-header">
+                <strong>Correquisitos de la Asignatura</strong>
+              </div>
+              <div class="card-body">
+                <table table class="table table-sm" >
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre</th>
+                      <th>Codigo</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="correquisito">
+                    <tr *ngFor="let cor of correquisito" >
+                      <td>{{ cor.id }}</td>
+                      <td>{{ cor.nombre }}</td>
+                      <td>{{ cor.codigo }}</td>
+                    </tr>
+                  </tbody>
+                </table>      
+              </div>
+            </div>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-ver-silabo *ngIf="this.silaboService.viendoSilabo"></app-ver-silabo>

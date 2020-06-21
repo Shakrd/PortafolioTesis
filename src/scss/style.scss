@@ -1,0 +1,45 @@
+// If you want to override variables do it here
+@import "variables";
+
+// Import styles
+@import "~@coreui/coreui/scss/coreui";
+
+// If you want to add something do it here
+@import "custom";
+
+  .tree .tree-node {
+    cursor: pointer;
+    background-color: #EEE;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
+  .tree .tree-node-active {
+    background-color: #CFD8DC;
+    color: black;
+  }
+
+  .alert-md-color {
+    background-color: #63ce48;
+    border-color: rgb(81, 206, 87);
+    color: #fff;
+    font-weight: bold;
+  }
+  .alert-md-color-error {
+    background-color: #d10000;
+    border-color: #af0606;
+    color: #fff;
+    font-weight: bold;
+  }
+  .posicion {
+    position: fixed;
+    z-index: 2000;
+  }
+
+  .outerCont {
+    margin-right: 25%;
+    position: relative;
+  }
+
+  .floatRight {
+    float: right;
+  }

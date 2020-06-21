@@ -1,0 +1,205 @@
+<div class="row justify-content-center">
+  <nav aria-label="...">
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" routerLink="/contenido-asignatura" tabindex="-1">Atrás</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" routerLink="/crear-silabo">Crear Sílabo</a>
+      </li>
+      <li class="page-item">
+        <a routerLink="/descripcion-objetivos" class="page-link">Objetivos</a>
+      </li>
+      <li class="page-item">
+        <a routerLink="/resultado-aprendizaje-asignatura" class="page-link">Resultados</a>
+      </li>
+      <li class="page-item">
+        <a routerLink="/contenido-asignatura" class="page-link">Contenido</a>
+      </li>
+      <li class="page-item active">
+        <a routerLink="/estrategias-recursos" class="page-link">Estrategias y Recursos</a>
+      </li>
+      <li class="page-item disabled">
+        <a class="page-link">Siguiente</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<div class="outerCont">
+  <div class="floatRight">
+    <div class="posicion">
+      <div *ngFor="let alert of alertas" class="row">
+          <alert *ngIf="!alert.error" type="success" [dismissOnTimeout]="alert.timeout">
+            {{ alert.msg }}</alert>
+          <alert *ngIf="alert.error" type="danger" [dismissOnTimeout]="alert.timeout">
+            {{ alert.msg }}</alert>
+      </div>
+      <!-- <alert class="row align-self-end" *ngIf="formMaterial.invalid && (formMaterial.touched || formMaterial.dirty)" type="danger" >
+        Revisar campos de formulario materiales...
+      </alert>
+      <alert class="row align-self-end" *ngIf="formEstrategias.invalid && (formEstrategias.touched || formEstrategias.dirty)" type="danger" >
+        Revisar campos de formulario estrategias y finalidades...
+      </alert> -->
+    </div>
+  </div>
+</div>
+
+
+<div class="mb-4">
+  <div class="card">
+    <div class="card text-white bg-success"></div>
+    <form #formMaterial="ngForm" ngForm (ngSubmit)="(!formMaterial.invalid && (formMaterial.touched || formMaterial.dirty)) ? (editandoMaterial ? actualizarMaterial() && formMaterial.invalid = null : crearMaterial() && formMaterial.invalid = null) : null">
+      <div class="card-header">
+        <strong>Recursos Didacticos</strong>
+      </div>
+      <div class="card text-white bg-success"></div>
+      <div class="card-body form-horizontal">
+        <div class="form-group row">
+          <label class="col-form-label col-md-3 font-weight-bold" for="select1">
+            Tipo de Material
+          </label>
+          <div>
+            <select [(ngModel)]="verNombreTipoMaterial() ? verNombreTipoMaterial() : material.tipoMaterial" *ngIf="tiposMaterial" class="form-control"
+               name="tipoMaterial">
+               <option [value]="null" disabled class ="font-weight-bold">Seleccione Tipo de Material</option>
+              <option (click)="material.tipoMaterial = tipoMaterial.id" *ngFor="let tipoMaterial of tiposMaterial" [value]="tipoMaterial.id"> {{ tipoMaterial.nombre }}
+              </option>
+
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label font-weight-bold">Material</label>
+          <textarea minlength="1" required id="textarea-input" name="nombre" rows="3" class="form-control col-md-8"
+            [(ngModel)]="material.nombre" placeholder="Contenido"></textarea>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label font-weight-bold">Descripción</label>
+          <textarea minlength="1" required id="textarea-input" name="descripcion" rows="3" class="form-control col-md-8"
+            [(ngModel)]="material.descripcion" placeholder="Contenido"></textarea>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label"></label>
+        <div class="col-md-3 mb-3">
+          <button type="submit" class="btn btn-success">{{editandoMaterial ? 'Actualizar' : 'Crear'}}
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Tipo de Material</th>
+          <th>Material</th>
+          <th>Descripcion</th>
+          <th>Eliminar</th>
+          <th>Editar</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="materiales">
+        <tr *ngFor="let material of materiales">
+          <td *ngIf="material.tipoMaterial">{{mostrarNombreTipoMaterial(material.tipoMaterial)}}</td>
+          <td>{{material.nombre}}</td>
+          <td>{{material.descripcion}}</td>
+          <td>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="isChecked" id="check"
+                (change)="ingresarMaterialParaEliminar(material, $event.target.checked)" />
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" (click)="editandoMaterial = true; setMaterial(material)"><span><i
+                  class="icons icon-pencil"></i></span></button>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div class="form-group row">
+      <label class="col-md-9 col-form-label"></label>
+
+      <div class="col-md-3 mb-3">
+        <button type="button" (click)="eliminarMateriales()" class="btn btn-danger">Borrar</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card text-white bg-success"></div>
+      <div class="card-header">
+
+        <strong>Estrategias Metodologicas</strong>
+
+      </div>
+
+      <div class="card text-white bg-success"></div>
+      <div class="card-body">
+
+        <form  #formEstrategias="ngForm" ngForm ngForm #formEstrategias="ngForm" 
+        (ngSubmit)="(!formEstrategias.invalid && (formEstrategias.touched || formEstrategias.dirty)) ? (editando ? actualizarEstrategia() : crearEstrategia() ) : null">
+          <div class="form-group row">
+            <label class="col-md-3 font-weight-bold" for="name">Estrategia</label>
+            <div class="col-md-8">
+              <textarea required [(ngModel)]="estrategiaMetodologica.nombre" id="textarea-input" name="nombre" rows="3"
+                class="form-control" placeholder="Contenido"></textarea>
+            </div>
+
+          </div>
+          
+          <div class="form-group row">
+            <label class="col-md-3 font-weight-bold" for="name">Finalidad</label>
+            <div class="col-md-8">
+              <textarea minlength="1" required [(ngModel)]="estrategiaMetodologica.finalidad" id="textarea-input" name="finalidad" rows="3"
+                class="form-control" placeholder="Contenido"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label"></label>
+
+            <div class="col-md-3 mb-3">
+              <button type="submit"
+                class="btn btn-success">{{editando ? 'Actualizar' : 'Crear'}}</button>
+            </div>
+
+          </div>
+        </form>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Estrategia Metodológica</th>
+              <th>Finalidad</th>
+              <th>Eliminar</th>
+              <th>Editar</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let estrategia of estrategias">
+              <td>{{estrategia.nombre}}</td>
+              <td>{{estrategia.finalidad}}</td>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="radios" id="radio1"
+                    (change)="ingresarEstrategiaParaEliminar(estrategia, $event.target.checked)">
+                </div>
+              </td>
+              <td>
+                <button class="btn btn-primary"
+                  (click)="editando = true; setEstrategiayFinalidad(estrategia)"><span><i
+                      class="icons icon-pencil"></i></span></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="form-group row">
+          <label class="col-md-9 col-form-label"></label>
+
+          <div class="col-md-3 mb-3">
+            <button type="button" (click)="eliminarEstrategias()" class="btn btn-danger">Borrar</button>
+          </div>
+        </div>
+        <ngx-spinner></ngx-spinner>

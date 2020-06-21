@@ -1,0 +1,292 @@
+<div class="row justify-content-center">
+    <nav aria-label="...">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" routerLink="/resultado-aprendizaje-asignatura" tabindex="-1">Atrás</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" routerLink="/crear-silabo">Crear Sílabo</a>
+        </li>
+        <li class="page-item">
+          <a routerLink="/descripcion-objetivos" class="page-link">Objetivos</a>
+        </li>
+        <li class="page-item">
+          <a routerLink="/resultado-aprendizaje-asignatura" class="page-link">Resultados</a>
+        </li>
+        <li class="page-item active">
+          <a routerLink="/contenido-asignatura" class="page-link">Contenido</a>
+        </li>
+        <li class="page-item">
+          <a routerLink="/estrategias-recursos" class="page-link">Estrategias y Recursos</a>
+        </li>
+        <li class="page-item">
+          <a routerLink="/estrategias-recursos" class="page-link">Siguiente</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  
+<div class="outerCont">
+    <div class="floatRight">
+<div class="posicion">
+    <div *ngFor="let alert of alertas" class="row">
+      <alert class="col align-self-end" *ngIf="!alert.error" type="success" [dismissOnTimeout]="alert.timeout">
+        {{ alert.msg }}</alert>
+      <alert class="col align-self-end" *ngIf="alert.error" type="danger" [dismissOnTimeout]="alert.timeout">
+        {{ alert.msg }}</alert>
+    </div>
+</div>
+<!-- 
+<alert class="row align-self-end" *ngIf="formUnidad.invalid && (formUnidad.touched || formUnidad.dirty)" type="danger" >
+    Revisar campos de formulario unidad...
+</alert>
+<alert class="row align-self-end" *ngIf="formSemana.invalid && (formSemana.touched || formSemana.dirty)" type="danger" >
+Revisar campos de formulario semana...
+</alert> -->
+</div>
+</div>
+
+<h1>Contenido de la Asignatura</h1>
+<div class="row mb-4">
+    <div class="col-12">
+      
+            <form #formUnidad="ngForm" ngForm (ngSubmit)="(!formUnidad.invalid && (formUnidad.touched || formUnidad.dirty)) ? createUnidad(unidad) && formUnidad.invalid = false : null" class="form-horizontal">
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label font-weight-bold">Nombre Unidad</label>
+                    <div class="col-md-9">
+                        <input required type="text" [(ngModel)]="unidad.nombre" name="nombre" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label"></label>
+                        <div class="col-md-4">
+                            <button class="btn btn-success" type="submit" >Crear Unidad</button>    
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+    </div>
+</div>
+<div *ngIf="unidades">
+    <div class="row" *ngFor="let unidad of unidades">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Unidad {{ obtenerIndiceUnidad(unidad) }}</strong> {{unidad.nombre}}
+                    <div class="card-header-actions">
+                        <button class="btn btn-sm btn-danger" (click)="eliminarUnidad(unidad.id)"><i class="icon-trash icons"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+    
+                    <form #formSemana="ngForm" ngForm (ngSubmit)="(!formSemana.invalid && (formSemana.touched || formSemana.dirty)) ? editandoSemana ? actualizarSemana() && formSemana.invalid = null : crearSemana(unidad.id) && formSemana.invalid = null : null" >
+                    <div class="row">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label class="col-md-6 col-sm-4 my-2 col-form-label">Numero De Semana</label>
+                                <input required type="text" [(ngModel)]="semana.semanaNumero" name="semanaNumero" class="form-control col-sm-3" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-form-label">Contenido</label>
+                                <div class="col-md-2">
+                                    <input required type="text" class="form-control" name="contenido" [(ngModel)]="semana.contenido" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="row">
+    
+                        <div class="card col-md-4 border-primary">
+                            <div class="card-header">
+                                <strong>Docencia</strong>
+                            </div>
+                            <div class="card-body">
+                                <div class="row justify-content-between mb-2">
+                                    <label class="col-8 my-2">Actividades de Docencia</label>
+                                    <input required type="text" name="horasActividadDocencia" [(ngModel)]="semana.horasActividadDocencia" class="form-control mr-4 col-3" placeholder="Horas">
+    
+                                </div>
+                                <div class="row">
+                                    <textarea required id="textarea-input" name="textarea-input" rows="4"
+                                        class="form-control col-auto" name="actividadDocencia" [(ngModel)]="semana.actividadDocencia" placeholder="Contenido.."></textarea>
+                                </div>
+    
+                            </div>
+                        </div>
+    
+    
+                        <div class="card col-md-3 mx-1 border-primary">
+                            <div class="card-header">
+                                <strong>Prácticas Experimentales</strong>
+                            </div>
+                            <div class="card-body">
+                                <div class="row justify-content-between">
+                                    <label class="col-6 my-2">Trabajo Practico</label>
+                                    <input required type="text" [(ngModel)]="semana.horasTrabajoPractico" name="horasTrabajoPractico" class="form-control mr-4 col-4" placeholder="Horas">
+    
+                                </div>
+                                <div class="row">
+                                    <textarea required id="textarea-input" name="textarea-input" rows="4"
+                                        class="form-control col-auto" name="trabajoPractico" [(ngModel)]="semana.trabajoPractico" placeholder="Contenido.."></textarea>
+    
+                                </div>
+    
+                            </div>
+                        </div>
+                        <div class="card col-md-4 ml-0 border-primary">
+                            <div class="card-header">
+                                <strong>Trabajo Autónomo</strong>
+                            </div>
+                            <div class="card-body">
+                                <div class="row justify-content-between mb-2">
+                                    <label class="col-8 my-2">Actividades de Investigación</label>
+                                    <input required type="text" name="horasTrabajoAutonomo" [(ngModel)]="semana.horasTrabajoAutonomo" class="form-control mr-4 col-3" placeholder="Horas">
+    
+                                </div>
+                                <div class="row">
+                                    <textarea required id="textarea-input" name="textarea-input" rows="4"
+                                        class="form-control col-auto" name="trabajoAutonomo" [(ngModel)]="semana.trabajoAutonomo" placeholder="Contenido.."></textarea>
+    
+                                </div>
+    
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="text-center">
+                        <div class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-md-2 font-weight-bold col-form-label">Observaciones</label>
+                                <div class="col-md-9">
+                                    <input required type="text" name="observacion" [(ngModel)]="semana.observacion" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-md-2 col-form-label"></label>
+
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-success" >{{ editandoSemana ? 'Actualizar' : 'Crear' }}</button>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary" (click)="this.modal.show()" (click)="getSemanas(unidad.id)">Ver Semanas</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+<div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-primary" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"> Semanas </h4>
+                    <button type="button" class="close" (click)="this.modal.hide()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <table *ngIf="semanas" class="table table-striped table-responsive">
+                        <tr>    
+                            <th>
+                                # Semana
+                            </th>
+                            <th>
+                                Contenido
+                            </th>
+                            <th>
+                                Actividad Docencia
+                            </th>
+                            <th>
+                                Horas
+                            </th>
+                            <th>
+                                Trabajo Practico
+                            </th>
+                            <th>
+                                Horas
+                            </th>
+                            <th>
+                                Trabajo Autonomo
+                            </th>
+                            <th>
+                                Horas
+                            </th>
+                            <th>
+                                Observaciones
+                            </th>
+                            <th>
+                                
+                            </th>
+                        </tr>
+                        <tr *ngFor="let semana of semanas; last as esUltimo">
+                            <td>
+                                {{ semana.semanaNumero }}
+                            </td>
+                            <td>
+                                {{ semana.contenido }}
+                            </td>
+                            <td>
+                                {{ semana.actividadDocencia }}
+                            </td>
+                            <td>
+                                {{ semana.horasActividadDocencia }}
+                            </td>
+                            <td>
+                                {{ semana.trabajoPractico }}
+                            </td>
+                            <td>
+                                {{ semana.horasTrabajoPractico }}
+                            </td>
+                            <td>
+                                {{ semana.trabajoAutonomo }}
+                            </td>
+                            <td>
+                                {{ semana.horasTrabajoAutonomo }}
+                            </td>
+                            <td>
+                                {{ semana.observacion }}
+                               
+                            </td>
+                            <td >
+                                <button *ngIf="esUltimo" type="button" class="btn btn-danger" (click)="eliminarSemana(semana.id, unidad.id)" > <span><i class="icons icon-trash"></i></span> </button> 
+                                <button  type="button" class="btn btn-primary" 
+                                        (click)="editandoSemana = true; setSemana(semana); this.modal.hide();" 
+                                > <span><i class="icons icon-pencil"></i></span> </button> 
+                            </td>
+                        </tr>
+                        <tr *ngIf="semanas">
+                            <td><strong>Total</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ this.contarTotalHorasIndividual().horasDocente }}</td>
+                            <td></td>
+                            <td>{{ this.contarTotalHorasIndividual().horasPracticas }}</td>
+                            <td></td>
+                            <td>{{ this.contarTotalHorasIndividual().horasAutonomas }}</td>
+                            <td>{{ this.contarHorasTotales() }}</td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="this.modal.hide()">Cerrar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+</div>
+
+    <ngx-spinner></ngx-spinner>
